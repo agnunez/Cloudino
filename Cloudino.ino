@@ -10,7 +10,7 @@ template<class T>
 inline Print &operator <<(Print &obj, T arg)
 { obj.print(arg); return obj; }
 
-double Tobj,Tamb;
+double Tobj1,Tamb1,Tobj2,Tamb2;
 
 
 // CHANGE THIS TO YOUR OWN UNIQUE VALUE
@@ -58,8 +58,10 @@ void cloudCmd(WebServer &server, WebServer::ConnectionType type, char *url_tail,
   server.printP(htmlHead);
 
   server << "</p><h1>MXL90614 Temperature Sensor</h1><p>";
-  server << "Tobj: " << Tobj << "<br/>";
-  server << "Tamb: " << Tamb << "<br/>";
+  server << "Tobj1: " << Tobj1 << "<br/>";
+  server << "Tamb1: " << Tamb1 << "<br/>";
+  server << "Tobj2: " << Tobj2 << "<br/>";
+  server << "Tamb2: " << Tamb2 << "<br/>";
   server << "</body></html>";
 
 }
@@ -123,8 +125,10 @@ void outputPins(WebServer &server, WebServer::ConnectionType type, bool addContr
     server << "<form action='" PREFIX "/form' method='post'>";
 
   server << "</p><h1>MXL Temperature Sensor</h1><p>";
-  server << "Tobj: " << Tobj << "<br/>";
-  server << "Tamb: " << Tamb << "<br/>";
+  server << "Tobj1: " << Tobj1 << "<br/>";
+  server << "Tamb1: " << Tamb1 << "<br/>";
+  server << "Tobj1: " << Tobj2 << "<br/>";
+  server << "Tamb1: " << Tamb2 << "<br/>";
 
   server << "<h1>Digital Pins</h1><p>";
 
@@ -191,8 +195,8 @@ void defaultCmd(WebServer &server, WebServer::ConnectionType type, char *url_tai
   outputPins(server, type, false);  
 }
 
-double readMLXtemp(int TaTo){
-    int dev = 0x5A<<1;
+double readMLXtemp(int dev, int TaTo){
+//    int dev = 0x5A<<1;  //original device address
 //    int dev = 0x55<<1;  //device address modified
     int data_low = 0;
     int data_high = 0;
@@ -245,8 +249,10 @@ void setup()
 }
 
 void readSensors(){
-  Tobj = readMLXtemp(0) - 273.15;
-  Tamb = readMLXtemp(1) - 273.15;  
+  Tobj1 = readMLXtemp(0x5A<<1,0) - 273.15;
+  Tamb1 = readMLXtemp(0x5A<<1,1) - 273.15;  
+  Tobj2 = readMLXtemp(0x55<<1,0) - 273.15;
+  Tamb2 = readMLXtemp(0x55<<1,1) - 273.15;  
 }
 
 void loop()
